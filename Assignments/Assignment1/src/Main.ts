@@ -234,7 +234,11 @@ function doubleEachRecursive(list: List): List {
 // Delete the entire "throw" line below and replace it with your code.
 
 function reverse(list: List): List {
-  throw new Error("unimplemented - this one is your job");
+  if (list == null || list.rest == null) return list;
+  else {
+    const newFirst: List = reverse(list.rest);
+    return snoc(list.first, newFirst);
+  }
 }
 
 // **************
@@ -275,7 +279,14 @@ function reverse(list: List): List {
 // Delete the entire "throw" line below and replace it with your code.
 
 function duplicateOnes(list: List): List {
-  throw new Error("unimplemented - this one is your job");
+  if (list == null) return list;
+  else {
+    const newRest: List = duplicateOnes(list.rest);
+    if(list.first == 1) {
+      return cons(list.first, cons(1, newRest));
+    }
+    return cons(list.first, newRest);
+  }
 }
 
 // **************
@@ -590,7 +601,27 @@ function evaluate(tree: LogicTree): boolean {
 // Delete the entire "throw" line below and replace it with your code.
 
 function countOrs(tree: LogicTree): number {
-  throw new Error("unimplemented - this one is your job");
+
+  let orCount: number = 0;
+  if (tree.tag == "or")  orCount = 1;
+
+  switch (tree.tag) {
+    case "or":
+    case "and":
+      orCount += countOrs(tree.leftSubtree);
+      orCount += countOrs(tree.rightSubtree);
+      break;
+    
+    case "not":
+      orCount += countOrs(tree.subtree);
+      break;
+    
+    case "bool":
+      break;
+  }
+
+  return orCount;
+
 }
 
 // **************
@@ -634,7 +665,41 @@ function countOrs(tree: LogicTree): number {
 // Delete the entire "throw" line below and replace it with your code.
 
 function removeTrues(tree: LogicTree): LogicTree {
-  throw new Error("unimplemented - this one is your job");
+  switch (tree.tag) {
+    
+    case "or":
+      return {
+        tag: "or",
+        leftSubtree: removeTrues(tree.leftSubtree),
+        rightSubtree: removeTrues(tree.rightSubtree)
+      };
+
+    case "and":
+      return {
+        tag: "and",
+        leftSubtree: removeTrues(tree.leftSubtree),
+        rightSubtree: removeTrues(tree.rightSubtree)
+      };
+
+    case "not":
+      return {
+        tag: "not",
+        subtree: removeTrues(tree.subtree)
+      };
+
+
+    case "bool":
+      if (tree.value == false) return tree;
+      else {
+        return {
+          tag: "not",
+          subtree: {
+            tag: "bool",
+            value: false
+          }
+        };
+      }
+  }
 }
 
 // **************
