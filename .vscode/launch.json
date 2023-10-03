@@ -9,16 +9,16 @@
       "type": "pwa-chrome",
       "request": "launch",
       "reAttach": true,
-      "file": "${workspaceFolder}/html/index.html",
+      "file": "${fileDirname}/../html/index.html",
       "outFiles": [
-        "${workspaceFolder}/build/*.js"
+        "${fileDirname}/..//build/*.js"
       ],
-      "webRoot": "${workspaceFolder}",
+      "webRoot": "${fileDirname}/../",
       "suggestPathMappingWizard": true,
       "pathMappings": [
         {
           "url": "webpack:///src",
-          "path": "${workspaceFolder}/src"
+          "path": "${fileDirname}/..//src"
         },
         {
           "url": "webpack:///~/",
@@ -71,16 +71,16 @@
       "type": "pwa-msedge",
       "request": "launch",
       "reAttach": true,
-      "file": "${workspaceFolder}/html/index.html",
+      "file": "${fileDirname}/..//html/index.html",
       "outFiles": [
-        "${workspaceFolder}/build/*.js"
+        "${fileDirname}/..//build/*.js"
       ],
-      "webRoot": "${workspaceFolder}",
+      "webRoot": "${fileDirname}/../",
       "suggestPathMappingWizard": true,
       "pathMappings": [
         {
           "url": "webpack:///src",
-          "path": "${workspaceFolder}/src"
+          "path": "${fileDirname}/..//src"
         },
         {
           "url": "webpack:///~/",
