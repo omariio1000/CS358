@@ -223,7 +223,24 @@ export function interpret(scope: Scope, tree: AST): boolean {
 // Delete the entire "throw" line below and replace it with your code.
 
 export function countNameOccurrences(name: string, tree: AST): number {
-  throw new Error("unimplemented - this one is your job");
+  let occurenceCount = 0
+  switch (tree.tag) {
+    case "or":
+      occurenceCount += countNameOccurrences(name, tree.leftSubtree) + countNameOccurrences(name, tree.rightSubtree);
+      break;
+    
+    case "not":
+      occurenceCount += countNameOccurrences(name, tree.subtree);
+      break;
+    
+    case "bool":
+      return 0;
+      
+    case "name":
+      if (tree.name === name) return 1;
+      return 0;
+  }
+  return occurenceCount;
 }
 
 // **************
@@ -265,7 +282,29 @@ export function countNameOccurrences(name: string, tree: AST): number {
 // Delete the entire "throw" line below and replace it with your code.
 
 export function removeDoubleNegations(tree: AST): AST {
-  throw new Error("unimplemented - this one is your job");
+  switch (tree.tag) {
+    case "or":
+      return {
+        tag: "or",
+        leftSubtree: removeDoubleNegations(tree.leftSubtree),
+        rightSubtree: removeDoubleNegations(tree.rightSubtree)
+      };
+
+      
+    case "not":
+      if (tree.subtree.tag == "not") 
+        return removeDoubleNegations(tree.subtree.subtree);
+      return {
+        tag: "not",
+        subtree: removeDoubleNegations(tree.subtree)
+      };
+      
+    case "bool":
+    case "name":
+      return tree;
+
+  }
+  return tree;
 }
 
 // **************
@@ -304,7 +343,31 @@ export function removeDoubleNegations(tree: AST): AST {
 // Delete the entire "throw" line below and replace it with your code.
 
 export function substituteAllNames(scope: Scope, tree: AST): AST {
-  throw new Error("unimplemented - this one is your job");
+  switch (tree.tag) {
+    case "or":
+      return {
+        tag: "or",
+        leftSubtree: substituteAllNames(scope, tree.leftSubtree),
+        rightSubtree: substituteAllNames(scope,tree.rightSubtree)
+      };
+
+      
+    case "not":
+      return {
+        tag: "not",
+        subtree: substituteAllNames(scope, tree.subtree)
+      };
+      
+    case "bool":
+      return tree;
+
+    case "name":
+      return {
+        tag: "bool",
+        value: interpret(scope, tree)
+      };
+
+  }
 }
 
 // **************
@@ -359,5 +422,23 @@ export function substituteAllNames(scope: Scope, tree: AST): AST {
 // Delete the entire "throw" line below and replace it with your code.
 
 export function equalExceptNames(tree1: AST, tree2: AST): boolean {
-  return false;
+  switch (tree1.tag) {
+    case "or":
+      if (tree2.tag != "or") return false;
+      return (equalExceptNames(tree1.leftSubtree, tree2.leftSubtree) && 
+               equalExceptNames(tree1.rightSubtree, tree2.rightSubtree));
+      
+    case "not":
+      if (tree2.tag != "not") return false;
+      return equalExceptNames(tree1.subtree, tree2.subtree);
+
+    case "bool":
+      if (tree2.tag != "bool") return false;
+      else if (tree1.value == tree2.value) return true;
+      return false;
+    
+    case "name":
+      if (tree2.tag != "name") return false;
+      return true;
+  }
 }
