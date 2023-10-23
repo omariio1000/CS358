@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Assignment 3: CS 358</title>
+    <script src="../build/hw3.js"></script>
+    <script src="../build/astlib.js"></script>
+    <script src="../build/iolib.js"></script>
+    <link rel="stylesheet" href="../style/main.css">
+    <link id="darkmode" rel="stylesheet" href="../style/dark.css" disabled>
+  </head>
+  <body>
+
+    <p id="toggle-colorscheme-container" class="section">
+      <label for="toggle-colorscheme">Toggle dark mode:</label>
+      <input
+        id="toggle-colorscheme"
+        type="checkbox"
+        onchange="iolib.toggleColorScheme(this.checked)"
+        onload="iolib.toggleColorScheme(this.checked)"
+      ></input>
+    </p>
+
+    <p>
+      <form class="section"
+        onsubmit="
+          iolib.handleForm(
+            this,
+            [ iolib.readFixity,
+              iolib.readFixity,
+              iolib.readFixity,
+              iolib.readFixity,
+              iolib.readFixity,
+              iolib.readFixity,
+              iolib.readFixity,
+              iolib.readFixity,
+              iolib.readScope,
+              iolib.identity
+            ],
+            iolib.render,
+            iolib.run
+          );
+          return false;
+        "
+      >
+        <div>
+          <label for="parse-fixity">fixity table:</label>
+          <table id="parse-fixity" class="fixity-table">
+            <tr>
+              <td><label for="input-fixity-and"><code>&&</code></label></td>
+              <td><input id="input-fixity-and" type="text" value="1 left"></input></td>
+            </tr>
+            <tr>
+              <td><label for="input-fixity-or"><code>||</code></label></td>
+              <td><input id="input-fixity-or" type="text" value="1 left"></input></td>
+            </tr>
+            <tr>
+              <td><label for="input-fixity-less"><code>&lt;</code></label></td>
+              <td><input id="input-fixity-less" type="text" value="2 left"></input></td>
+            </tr>
+            <tr>
+              <td><label for="input-fixity-equal"><code>==</code></label></td>
+              <td><input id="input-fixity-equal" type="text" value="2 left"></input></td>
+            </tr>
+            <tr>
+              <td><label for="input-fixity-plus"><code>+</code></label></td>
+              <td><input id="input-fixity-plus" type="text" value="3 right"></input></td>
+            </tr>
+            <tr>
+              <td><label for="input-fixity-minus"><code>-</code></label></td>
+              <td><input id="input-fixity-minus" type="text" value="3 right"></input></td>
+            </tr>
+            <tr>
+              <td><label for="input-fixity-times"><code>*</code></label></td>
+              <td><input id="input-fixity-times" type="text" value="4 right"></input></td>
+            </tr>
+            <tr>
+              <td><label for="input-fixity-divide"><code>/</code></label></td>
+              <td><input id="input-fixity-divide" type="text" value="4 right"></input></td>
+            </tr>
+          </table>
+        </div>
+        <div>
+          <label for="input-scope">runtime scope:</label>
+          <input id="input-scope" class="source-input" type="text"></input>
+        </div>
+        <div>
+          <label for="input-source">program source code:</label>
+          <input id="input-source" class="source-input" type="text"></input>
+        </div>
+        <input type="submit" class="submit" value="Run interpreter"></input>
+        <div>Output: <span class="output"></span></div>
+      </form>
+    </p>
+
+  </body>
+</html>
