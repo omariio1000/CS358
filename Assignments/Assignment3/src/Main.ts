@@ -161,11 +161,11 @@ export function execute(scope: Scope, tree: AST): Value {
 // All of your strings should have different lengths. For example, if one of
 // your strings is "abc", then none of your other strings should have length 3.
 
-export const tokenizingError1 = "";
-export const tokenizingError2 = "";
-export const tokenizingError3 = "";
-export const tokenizingError4 = "";
-export const tokenizingError5 = "";
+export const tokenizingError1 = "a |c";
+export const tokenizingError2 = "b7 &d";
+export const tokenizingError3 = "e |& v";
+export const tokenizingError4 = "z&&v|45";
+export const tokenizingError5 = "false&true|fdalce";
 
 // ******************
 // * EXERCISE 1 END *
@@ -188,11 +188,11 @@ export const tokenizingError5 = "";
 // All of your strings should have different lengths. For example, if one of
 // your strings is "abc", then none of your other strings should have length 3.
 
-export const parsingError1 = "";
-export const parsingError2 = "";
-export const parsingError3 = "";
-export const parsingError4 = "";
-export const parsingError5 = "";
+export const parsingError1 = "a ||";
+export const parsingError2 = "< 454324";
+export const parsingError3 = "== 132.2324";
+export const parsingError4 = "&& 123.123";
+export const parsingError5 = "== jasdfjasdf";
 
 // ******************
 // * EXERCISE 2 END *
@@ -216,11 +216,11 @@ export const parsingError5 = "";
 // All of your strings should have different lengths. For example, if one of
 // your strings is "abc", then none of your other strings should have length 3.
 
-export const executionError1 = "";
-export const executionError2 = "";
-export const executionError3 = "";
-export const executionError4 = "";
-export const executionError5 = "";
+export const executionError1 = "apple && 45";
+export const executionError2 = "banana && 34.123";
+export const executionError3 = "pear * 112312312313";
+export const executionError4 = "fj + 123.123123";
+export const executionError5 = "13.323 || 123";
 
 // ******************
 // * EXERCISE 3 END *
@@ -252,13 +252,13 @@ export const executionError5 = "";
 //   "6 && 7 == 8 * 9 || 10 == 11 && 12" should parse the same as "((6 && 7) == (8 * (9 || 10))) == (11 && 12)"
 
 export const nonstandardOrderOfOperations: FixityTable = {
-  and: { precedence: 1, associativity: "left" },
-  or: { precedence: 1, associativity: "left" },
-  less: { precedence: 2, associativity: "left" },
+  and: { precedence: 3, associativity: "left" },
+  or: { precedence: 4, associativity: "left" },
+  less: { precedence: 1, associativity: "right" },
   equal: { precedence: 2, associativity: "left" },
-  plus: { precedence: 3, associativity: "right" },
+  plus: { precedence: 5, associativity: "right" },
   minus: { precedence: 3, associativity: "right" },
-  times: { precedence: 4, associativity: "right" },
+  times: { precedence: 3, associativity: "right" },
   divide: { precedence: 4, associativity: "right" },
 };
 
