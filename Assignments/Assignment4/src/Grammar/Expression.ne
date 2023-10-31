@@ -77,14 +77,14 @@ expression1 -> expression2
   {% id %}
 
 
-expression2 -> expression2 %less expression2
+expression2 -> expression3 %less expression2
   {% buildInfixOpNode("less") %}
 
 expression2 -> expression3
   {% id %}
 
 
-expression3 -> expression3 %or expression2
+expression3 -> expression3 %or expression4
   {% buildInfixOpNode("or") %}
 
 expression3 -> expression4
@@ -98,10 +98,10 @@ expression4 -> expression5
   {% id %}
 
 
-expression5 -> expression5 %plus expression5
+expression5 -> expression5 %plus expression6
   {% buildInfixOpNode("plus") %}
 
-expression5 -> expression6 %dash expression5
+expression5 -> expression5 %dash expression6
   {% buildInfixOpNode("minus") %}
 
 expression5 -> expression6
@@ -111,7 +111,7 @@ expression5 -> expression6
 expression6 -> expression7 %times expression6
   {% buildInfixOpNode("times") %}
 
-expression6 -> expression7 %divide expression8
+expression6 -> expression7 %divide expression6
   {% buildInfixOpNode("divide") %}
 
 expression6 -> expression7
