@@ -1,3 +1,21 @@
+// With **your modified** fixity table:
+//   "1 + 2 * 3" should parse the same as "(1 + 2) * 3"
+//   "3 / 4 == 5 || 6" should parse the same as "(3 / 4) == (5 || 6)"
+//   "4 / 5 / 6 - 7 - 8" should parse the same as "(4 / (5 / 6)) - (7 - 8)"
+//   "1 < 2 < (3 == 4) - 5 + 6" should parse the same as "1 < (2 < ((3 == 4) - (5 + 6)))"
+//   "6 && 7 == 8 * 9 || 10 == 11 && 12" should parse the same as "((6 && 7) == (8 * (9 || 10))) == (11 && 12)"
+
+export const nonstandardOrderOfOperations: FixityTable = {
+  and: { precedence: 3, associativity: "left" },
+  or: { precedence: 4, associativity: "left" },
+  less: { precedence: 1, associativity: "right" },
+  equal: { precedence: 2, associativity: "left" },
+  plus: { precedence: 5, associativity: "right" },
+  minus: { precedence: 3, associativity: "right" },
+  times: { precedence: 3, associativity: "right" },
+  divide: { precedence: 4, associativity: "right" },
+};
+
 // ==    1 left
 // <     2 right
 // ||    3 left
@@ -84,22 +102,6 @@ type ConsCell = {
     readonly first: number; 
     readonly rest: List;
 }
-function sampleList(): List {
-    let list1: List = null;
-    list1 = { first: 6, rest: list1 };
-    const list2: List = { first: 5, rest: list1 };
-    const list3: List = {
-      first: 4,
-      rest: {
-        first: 3,
-        rest: {
-          first: 2,
-          rest: list2
-        }
-      }
-    };
-    return { first: 1, rest: list3 };
-};
 function cons(newFirst: number, list: List): List {
     return {
         first: newFirst,
