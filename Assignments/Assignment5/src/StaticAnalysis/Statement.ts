@@ -98,5 +98,27 @@ export function typecheckStmt(scope: StaticProgramScope, stmt: Stmt): void {
 
       break;
     }
+
+    case "switch": {
+      const conditionType = inferExprType(scope, stmt.focus);
+
+    
+      for (let cse of stmt.valueCases.entries()) {
+        // assertType(conditionType, inferValueType(cse[0]));
+        if (conditionType == inferValueType(cse[0])) {
+          pushLocalScope(scope);
+          typecheckStmt(scope, cse[1]);
+          popLocalScope(scope);
+        }
+      }
+
+      if (stmt.defaultCase != null) {
+        pushLocalScope(scope);
+        typecheckStmt(scope, stmt.defaultCase);
+        popLocalScope(scope);
+      }
+
+      break;
+    }
   }
 }

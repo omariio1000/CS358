@@ -119,13 +119,26 @@ export function inferExprType(scope: StaticProgramScope, expr: Expr): SourceType
     case "bool":
       return expr.tag;
 
-    case "lessThan":
-      throw new Error("unimplemented");
+    case "lessThan": {
+      const leftType = inferExprType(scope, expr.leftSubexpr);
+      const rightType = inferExprType(scope, expr.rightSubexpr);
+      // We use assertType here to check that both subtrees have the *same*
+      // type, regardless of what that type is.
+      assertType("num", leftType);
+      assertType("num", rightType);
+      return "bool";
+    }
 
     // This code works, but you'll be modifying it in exercise 2 to be more
     // complete.
     case "and":
-    case "or":
-      return inferInfixExprType("bool", "bool", scope, expr);
+    case "or": {
+      const leftType = inferExprType(scope, expr.leftSubexpr);
+      const rightType = inferExprType(scope, expr.rightSubexpr);
+
+      assertType(leftType, rightType);
+      return leftType;
+    }
+      
   }
 }
