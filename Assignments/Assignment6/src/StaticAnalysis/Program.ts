@@ -24,6 +24,10 @@ export function typecheckProgram(prog: Program) {
     for (const param of func.parameters)
       declare(param.name, param.type, scope);
 
+    
+
+    pushLocalScope(scope);
+
     // Typecheck each statement in the body of the function. This might declare
     // new variables in the function call's local scope.
     for (const stmt of func.body)
@@ -34,6 +38,7 @@ export function typecheckProgram(prog: Program) {
     // the function body.
     assertType(func.returnType, inferExprType(prog, scope, func.returnExpr));
 
+    popLocalScope(scope);
     // Exit the function call's local scope.
     popLocalScope(scope);
   }

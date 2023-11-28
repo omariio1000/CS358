@@ -58,8 +58,34 @@ export function inferExprType(
       return func.returnType;
     }
 
-    case "compose":
-      throw new Error("unimplemented");
+    case "compose": {
+      const func1 = dispatch(prog, expr.functionNames[0]);
+
+      if (func1.parameters.length != expr.arguments.length)
+        throw new StaticTypeError("incorrect argument count");
+
+      for (let i = 0; i < expr.arguments.length; i++) {
+        const param = func1.parameters[i];
+        const arg = expr.arguments[i];
+        assertType(param.type, inferExprType(prog, scope, arg));
+      }
+
+      const ret: ValueType[] = [];
+      ret.push(func1.returnType);
+
+      for (let i = 1; i < expr.functionNames.length; i++) {
+        const func = dispatch(prog, expr.functionNames[i]);
+        if (func.parameters.length != 1)
+          throw new StaticTypeError("incorrect argument count");
+
+        const param = func.parameters[0];
+        assertType(param.type, ret[i - 1]);
+
+        ret.push(func.returnType);
+      }
+      
+      return ret[expr.functionNames.length - 1];
+    }
 
     case "plus":
     case "minus":

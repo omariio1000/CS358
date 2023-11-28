@@ -36,6 +36,8 @@ export function executeExpr(
         declare(param.name, value, scope);
       }
 
+      pushLocalScope(scope);
+    
       // Execute each statement in the body of the function. This might declare
       // new variables in the function call's local scope.
       for (const stmt of func.body)
@@ -46,6 +48,7 @@ export function executeExpr(
       // body.
       const returnValue = executeExpr(prog, scope, func.returnExpr);
 
+      popLocalScope(scope);
       // Exit the function call's local scope.
       popLocalScope(scope);
 
@@ -53,8 +56,62 @@ export function executeExpr(
       return returnValue;
     }
 
-    case "compose":
-      throw new Error("unimplemented");
+    case "compose": {
+      const ret: Value[] = [];
+      for (let i = 0; i < expr.functionNames.length; i++) {
+        const func = dispatch(prog, expr.functionNames[i]);
+        const values: Value[] = [];
+        if (i == 0) {
+          // Make sure this function call has passed the same number of arguments
+          // that the function definition expects.
+          if (func.parameters.length != expr.arguments.length)
+            throw new DynamicTypeError("incorrect argument count");
+
+          // Execute each argument expression to get the argument values.
+          
+          for (const arg of expr.arguments)
+            values.push(executeExpr(prog, scope, arg));
+
+        }
+        else {
+          if (func.parameters.length != 1) 
+            throw new DynamicTypeError("incorrect argument count");
+
+            values.push(ret[i - 1]);
+        }
+
+        
+        // Enter a new local scope for the function call to execute in.
+        pushLocalScope(scope);
+
+        // Define each of the arguments in the function call's local scope.
+        for (let i = 0; i < values.length; i++) {
+          const param = func.parameters[i];
+          const value = values[i];
+          declare(param.name, value, scope);
+        }
+
+        pushLocalScope(scope);
+      
+        // Execute each statement in the body of the function. This might declare
+        // new variables in the function call's local scope.
+        for (const stmt of func.body)
+          executeStmt(prog, scope, stmt);
+
+        // Execute the return expression to get the return value. This might
+        // access new variables that were declared while executing the function
+        // body.
+        const returnValue = executeExpr(prog, scope, func.returnExpr);
+
+        popLocalScope(scope);
+        // Exit the function call's local scope.
+        popLocalScope(scope);
+
+        ret[i] = returnValue;
+      }
+      
+      return ret[expr.functionNames.length - 1];
+    }
 
     case "plus": {
       const leftValue = executeExpr(prog, scope, expr.leftSubexpr);

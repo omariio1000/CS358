@@ -95,7 +95,7 @@ export function buildComposeExpr(
 ): ComposeExpr {
   return {
     tag: "compose",
-    functionNames: names.map(name => name.text),
+    functionNames: names.map(name => name.toString()),
     arguments: args
   }
 }
