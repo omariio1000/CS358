@@ -87,7 +87,7 @@ export function buildCallExpr(
 export function buildComposeExpr(
   compose: Token,
   parenL: Token,
-  names: Token[],
+  names: string[],
   parenR: Token,
   parenL_: Token,
   args: Expr[],
@@ -95,7 +95,7 @@ export function buildComposeExpr(
 ): ComposeExpr {
   return {
     tag: "compose",
-    functionNames: names.map(name => name.toString()),
+    functionNames: names,
     arguments: args
   }
 }
